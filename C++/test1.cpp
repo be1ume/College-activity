@@ -1,9 +1,11 @@
 #include <iostream>
 
 int main(){
-    int number;
-    std::cout<<"Enter a number: ";
-    std::cin>>number;
-    std::cout<<"You've entered: " << number << std::endl;
-    return 0;
+    int number, result;
+    std::cout << "Enter a number: " ;
+    std::cin >>  number ; 
+    result = number + number; 
+    std::cout << "Youve entered: " << number << "\n" << "The sum of the number twice is: "  << result << std::endl;
+
+
 }
