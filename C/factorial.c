@@ -9,5 +9,5 @@ int main(){
     }
     printf("The factorial is: %d", f);
 /*bruh*/
-printf("bruh");
+printf("bruh alright bruh");
 }
