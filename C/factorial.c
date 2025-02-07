@@ -8,5 +8,6 @@ int main(){
         f=i*f;
     }
     printf("The factorial is: %d", f);
-
+/*bruh*/
+printf("bruh");
 }
