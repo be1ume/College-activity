@@ -1,4 +1,4 @@
-//MARIANO, Luciano Martin BSCS-1A
+//MARIANO - BSCS-1A
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -82,7 +82,7 @@ return -1;
 }
 
 void add(char n[], int q1, int q2, int q3){
-    int i, j, sortQ1, sortQ2, sortQ3;
+    int sq1, sq2, sq3;
     char sortName[MAX];
     if (isfull()){
         printf("Array is full.\n");
@@ -99,24 +99,18 @@ void add(char n[], int q1, int q2, int q3){
         quiz2[last] = q2;
         quiz3[last] = q3;
 
-        for (i = 0; i <= last; i++) {
-            for (j = 0; j < last - i; j++) {
+        for (int i = 0; i <= last; i++) {
+            for (int j = 0; j < last - i; j++) {
                 if (strcmp(name[j], name[j + 1]) > 0) {
                     strcpy(sortName, name[j]);
                     strcpy(name[j], name[j + 1]);
                     strcpy(name[j + 1], sortName);
 
-                    sortQ1 = quiz1[j];
-                    quiz1[j] = quiz1[j + 1];
-                    quiz1[j + 1] = sortQ1;
+                    sq1 = quiz1[j]; quiz1[j] = quiz1[j + 1]; quiz1[j + 1] = sq1;
 
-                    sortQ2 = quiz2[j];
-                    quiz2[j] = quiz2[j + 1];
-                    quiz2[j + 1] = sortQ2;
+                    sq2 = quiz2[j]; quiz2[j] = quiz2[j + 1]; quiz2[j + 1] = sq2;
 
-                    sortQ3 = quiz3[j];
-                    quiz3[j] = quiz3[j + 1];
-                    quiz3[j + 1] = sortQ3;
+                    sq3 = quiz3[j]; quiz3[j] = quiz3[j + 1]; quiz3[j + 1] = sq3;
                 }
             }
         }
@@ -240,4 +234,3 @@ else {
         add(n, quiz1, quiz2, quiz3);
     }
 }}
-
