@@ -38,7 +38,7 @@ while(1){
              add(n, q1, q2, q3);
              break;
     case 2 : system("cls"); printf("Input Student Name: "); scanf(" %[^\n]", n); upd_rec(n); break;
-    case 3 : system("cls"); printf("Input Student Name: "); scanf("%s",&n); del(n); break;
+    case 3 : system("cls"); printf("Input Student Name: "); scanf(" %[^\n]", n); del(n); break;
     case 4 : disp_all(); break;
     case 5 : system("cls"); printf("Input Student name: "); scanf(" %[^\n]", n); disp_rec(n); break;
     case 6 : save();exit(0);
@@ -228,9 +228,7 @@ if (fp==NULL){
     printf("File Error.\n");
     system("pause");
  }
-else {
-    while (!feof(fp)){
-        fscanf(fp,"%[^\n]\n%d\n%d\n%d\n",n,&quiz1, &quiz2, &quiz3);
+ else {
+    while (fscanf(fp, "%[^\n]\n%d\n%d\n%d\n", n, &quiz1, &quiz2, &quiz3) == 4) {
         add(n, quiz1, quiz2, quiz3);
-    }
-}}
+    }} fclose(fp); }
