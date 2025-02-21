@@ -82,7 +82,7 @@ return -1;
 }
 
 void add(char n[], int q1, int q2, int q3){
-    int sq1, sq2, sq3;
+    int sq1, sq2, sq3, i, j;
     char sortName[MAX];
     if (isfull()){
         printf("Array is full.\n");
@@ -99,8 +99,8 @@ void add(char n[], int q1, int q2, int q3){
         quiz2[last] = q2;
         quiz3[last] = q3;
 
-        for (int i = 0; i <= last; i++) {
-            for (int j = 0; j < last - i; j++) {
+        for (i = 0; i <= last; i++) {
+            for (j = 0; j < last - i; j++) {
                 if (strcmp(name[j], name[j + 1]) > 0) {
                     strcpy(sortName, name[j]);
                     strcpy(name[j], name[j + 1]);
