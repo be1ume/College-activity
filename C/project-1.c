@@ -3,17 +3,14 @@
 #include <time.h>
 #include <string.h>
 #define MAX 15
-/*A simple arithmetic program with the following
-1. Log-in/Sign up feature: username, password.
-2. Leader board - upon logging in the leader board will be shown. there should also be a feature where user can view the leaderboard.
-3. use parallel arrays to store player records, data will be stored upon exit.
-*/
 
 char user[MAX][50];
 char pass[MAX][50];
 int totpts[MAX];
+int e_score[MAX], m_score[MAX], h_score[MAX];
 int last;
 int current_user;
+float ave;
 
 void init();
 int menu();
@@ -35,6 +32,7 @@ void sort();
 void leaderboard();
 void save();
 void retrieve();
+float average(int e, int m, int h);
 
 int main(){
     int opt, n;
@@ -42,8 +40,6 @@ int main(){
     char u_int[50];
     init();
     retrieve();
-    leaderboard();
-    system("pause");
 
     while(1){
         system("cls");
@@ -72,22 +68,30 @@ int main(){
 
 int menu(){
     int op;
-    printf("1. Sign up\n");
-    printf("2. Log in\n");
-    printf("3. Leader board\n");
-    printf("4. Exit\n");
-    printf("Enter 1-3 to choose\n");
+    printf("========================================\n");
+    printf("|              MAIN MENU               |\n");
+    printf("========================================\n");
+    printf("     1. Sign up                       \n");
+    printf("     2. Log in                        \n");
+    printf("     3. Leader board                  \n");
+    printf("     4. Exit                          \n");
+    printf("     Enter 1-4 to choose              \n");
+    printf("========================================\n->");
     scanf("%d", &op);
     return op;
 }
 
 int game_menu(){
     int opt;
-    printf("==========Choose difficulty==========\n");
-    printf("1. Easy\n");
-    printf("2. Medium\n");
-    printf("3. Hard\n");
-    printf("4. Exit\n");
+    printf("========================================\n");
+    printf("|           Choose difficulty          |\n");
+    printf("========================================\n");
+    printf("  USER: %s \n  Easy: %d\tMedium: %d\tHard: %d\n", user[current_user], e_score[current_user], m_score[current_user], h_score[current_user]);
+    printf("     \e[32m1. Easy\e[0m\n");
+    printf("     \e[38;5;208m2. Medium\e[0m\n");
+    printf("     \e[31m3. Hard\e[0m\n");
+    printf("     4. Exit\n");
+    printf("========================================\n->");
     scanf("%d", &opt);
     return opt;
 }
@@ -131,6 +135,9 @@ void sign_up(){
     printf("Create password: ");
     scanf(" %[^\n]s", pass[last]);
     totpts[last] = 0;
+    e_score[last] = 0;
+    m_score[last] = 0;
+    h_score[last] = 0;
     }
 }
 
@@ -155,7 +162,7 @@ int log_in(){
                 return 1;
             }
             else{
-                printf("Wrong password\n");
+                printf("Wrong password.....\n");
                 return 0;
                 }
             }
@@ -173,24 +180,19 @@ void game(int n){
         scanf(" %c", &sel);
         if(sel=='y'){
             while(1){
-                sort();
                 system("cls");
-                printf("==========Player %s==========\n", user[current_user]);
                 switch(game_menu()){
                     case 1:
                         system("cls");
-                        printf("=====Player %s=====\n", user[current_user]);
-                        totpts[current_user] += easy();
+                        e_score[current_user] = easy();
                         break;
                     case 2:
                         system("cls");
-                        printf("=====Player %s=====\n", user[current_user]);
-                        totpts[current_user] += medium();
+                        m_score[current_user] = medium();
                         break;
                     case 3:
                         system("cls");
-                        printf("=====Player %s=====\n", user[current_user]);
-                        totpts[current_user] += hard();
+                        h_score[current_user] = hard();
                         break;
                     case 4:
                         system("cls");
@@ -206,13 +208,13 @@ int add(int n){
     int i, c=0, a, b, ans;
     a = rand() %n + 1;
     b = rand() %n + 1;
-    printf("\nWhat is %d + %d?\t", a, b);
+    printf("\nWhat is %d + %d?\n->", a, b);
     scanf("%d", &ans);
     if(ans == a+b){
-        printf("Correct!\n");
+        printf("\e[92mCorrect!\e[0m\n");
         c+=10;
     } else
-        printf("Wrong! The right answer is %d\n", a+b);
+        printf("\e[91mWrong!\e[0m The right answer is %d.\n", a+b);
     return c;
 }
 
@@ -225,13 +227,13 @@ int sub(int n){
             a=b;
             b=d;
     }
-    printf("\nWhat is %d - %d?\t", a, b);
+    printf("\nWhat is %d - %d?\n->", a, b);
     scanf("%d", &ans);
     if(ans == a-b){
-        printf("Correct!\n");
+        printf("\e[92mCorrect!\e[0m\n");
         c+=10;
     } else
-        printf("Wrong! The right answer is %d\n", a-b);
+        printf("\e[91mWrong!\e[0m The right answer is %d.\n", a-b);
     return c;
 }
 
@@ -242,14 +244,14 @@ int divi(int n){
         b = rand() %n + 1;
     }while(a%b != 0);
 
-    printf("\nWhat is %d / %d? ", a, b);
+    printf("\nWhat is %d / %d?\n->", a, b);
     scanf("%d", &ans);
 
     if(ans == a/b){
-        printf("Correct!\n");
+        printf("\e[92mCorrect!\e[0m\n");
         c+=10;
     } else
-        printf("Wrong! The right answer is %d\n", a/b);
+        printf("\e[91mWrong!\e[0m The right answer is %d.\n", a/b);
     return c;
 }
 
@@ -257,100 +259,185 @@ int multi(int n){
     int i, c = 0, a, b, ans;
     a = rand() %n + 1;
     b = rand() %n + 1;
-    printf("\nWhat is %d * %d? ", a, b);
+    printf("\nWhat is %d * %d?\n->", a, b);
     scanf("%d", &ans);
     if(ans == a*b){
-        printf("Correct!\n");
+        printf("\e[92mCorrect!\e[0m\n");
         c+=10;
     } else {
-        printf("Wrong! The right answer is %d\n", a*b);
+        printf("\e[91mWrong!\e[0m The right answer is %d.\n", a*b);
     } return c;
 }
 
 int easy(){
-    int c, pts=0;
+    int c, pts=0, temp;
     srand(time(NULL));
-    for(int i=0; i<5; i++){
+    for(int i=0; i<1;){
     c = rand() %4+1;
-        if(c==1)
-            pts += add(10);
-        if(c==2)
-            pts += sub(10);
-        if(c==3)
-            pts += divi(10);
-        if(c==4)
-            pts += multi(10);
-    } printf("\nYou've got %d/50 pts\n", pts);
+        if(c==1){
+            temp = 1*add(10);
+            if(temp==0)
+                break;
+            else
+                pts += temp;
+            }
+        if(c==2){
+            temp = 1*sub(10);
+            if(temp==0)
+                break;
+            else
+                pts += temp;
+            }
+        if(c==3){
+            temp = 1*divi(10);
+            if(temp==0)
+                break;
+            else
+                pts += temp;
+            }
+        if(c==4){
+            temp = 1*multi(10);
+            if(temp==0)
+                break;
+            else
+                pts += temp;
+            }
+
+    } printf("\nYou've got %d pts\n", pts);
     system("pause");
-    return pts;
+    if(pts>e_score[current_user])
+        return pts;
 }
 
 int medium(){
-    int c, pts=0, totpts=0;
+    int c, pts=0, temp;
     srand(time(NULL));
-    for(int i=0; i<5; i++){
+    for(int i=0; i<1;){
     c = rand() %4+1;
-        if(c==1)
-            pts += 2*add(50);
-        if(c==2)
-            pts += 2*sub(50);
-        if(c==3)
-            pts += 2*divi(50);
-        if(c==4)
-            pts += 2*multi(50);
-    }
-    printf("\nYou've got %d/100 pts\n", pts);
+        if(c==1){
+            temp = 2*add(50);
+            if(temp==0)
+                break;
+            else
+                pts += temp;
+            }
+        if(c==2){
+            temp = 2*sub(50);
+            if(temp==0)
+                break;
+            else
+                pts += temp;
+            }
+        if(c==3){
+            temp = 2*divi(50);
+            if(temp==0)
+                break;
+            else
+                pts += temp;
+            }
+        if(c==4){
+            temp = 2*multi(50);
+            if(temp==0)
+                break;
+            else
+                pts += temp;
+            }
+
+    } printf("\nYou've got %d pts\n", pts);
     system("pause");
-    return pts;
+    if(pts>m_score[current_user])
+        return pts;
 }
 
 int hard(){
-    int c, pts=0, totpts=0;
+    int c, pts=0, temp;
     srand(time(NULL));
-    for(int i=0; i<5; i++){
+    for(int i=0; i<1;){
     c = rand() %4+1;
-        if(c==1)
-            pts += 3*add(100);
-        if(c==2)
-            pts += 3*sub(100);
-        if(c==3)
-            pts += 3*divi(100);
-        if(c==4)
-            pts += 3*multi(100);
-    } printf("\nYou've got %d/150 pts\n", pts);
+        if(c==1){
+            temp = 3*add(100);
+            if(temp==0)
+                break;
+            else
+                pts += temp;
+            }
+        if(c==2){
+            temp = 3*sub(100);
+            if(temp==0)
+                break;
+            else
+                pts += temp;
+            }
+        if(c==3){
+            temp = 3*divi(100);
+            if(temp==0)
+                break;
+            else
+                pts += temp;
+            }
+        if(c==4){
+            temp = 3*multi(100);
+            if(temp==0)
+                break;
+            else
+                pts += temp;
+            }
+
+    } printf("\nYou've got %d pts\n", pts);
     system("pause");
-    return pts;
+    if(pts>h_score[current_user])
+        return pts;
 }
 
 void sort(){
-    int i, j, temp;
+    int i, j, a, b, temp;
     char user_temp[50];
     char pass_temp[50];
     for(i=0; i<=last; i++){
         for(j=0; j<last-i; j++){
-            if(totpts[j]<totpts[j+1]){
+            a = average(e_score[j], m_score[j], h_score[j]);
+            b = average(e_score[j+1], m_score[j+1], h_score[j+1]);
+            if(a<b){
                 strcpy(user_temp, user[j]);
                 strcpy(user[j], user[j+1]);
                 strcpy(user[j+1], user_temp);
                 strcpy(pass_temp, pass[j]);
                 strcpy(pass[j], pass[j+1]);
                 strcpy(pass[j+1], pass_temp);
-                temp = totpts[j];
-                totpts[j] = totpts[j+1];
-                totpts[j+1] = temp;
+                temp = e_score[j];
+                e_score[j] = e_score[j+1];
+                e_score[j+1] = temp;
+                temp = m_score[j];
+                m_score[j] = m_score[j+1];
+                m_score[j+1] = temp;
+                temp = h_score[j];
+                h_score[j] = h_score[j+1];
+                h_score[j+1] = temp;
             }
         }
     }
 }
 
+float average(int e, int m, int h){
+    return (e + m + h)/3.0;
+}
+
 void leaderboard(){
-    printf("=====Leaderboard=====\n");
-        printf("Top\tName\t\tPoints\n");
-        for(int i=0; i<=last; i++){
-            sort();
-            printf("%d.\t%s\t\t%d\t\n",i+1, user[i], totpts[i]);
-            }
-    printf("=====================\n");
+    printf("=====================\e[38;2;255;255;255mLEADERBOARD\e[0m=====================\n");
+    printf("| Top | Name            Easy\tMedium\tHard\tXP  |\n");
+    printf("=====================================================\n");
+    for(int i=0; i<=last; i++){
+        sort();
+        if(i==0)
+            printf("\e[38;2;255;255;0m   %d.\t%s\t\t%d\t%d\t%d\t%.2f\t\n\e[0m",i+1, user[i], e_score[i], m_score[i], h_score[i], average(e_score[i], m_score[i], h_score[i]));
+        else if(i==1)
+            printf("\e[38;2;255;255;255m   %d.\t%s\t\t%d\t%d\t%d\t%.2f\t\n\e[0m",i+1, user[i], e_score[i], m_score[i], h_score[i], average(e_score[i], m_score[i], h_score[i]));
+        else if(i==2)
+            printf("\e[38;5;180m   %d.\t%s\t\t%d\t%d\t%d\t%.2f\t\n\e[0m",i+1, user[i], e_score[i], m_score[i], h_score[i], average(e_score[i], m_score[i], h_score[i]));
+        else
+            printf("\e[38;2;128;128;128m   %d.\t%s\t\t%d\t%d\t%d\t%.2f\t\n\e[0m",i+1, user[i], e_score[i], m_score[i], h_score[i], average(e_score[i], m_score[i], h_score[i]));
+        }
+     printf("=====================================================\n");
 }
 
 void save(){
@@ -362,7 +449,7 @@ void save(){
         system("pause");
     }else{
         for(i=0; i<=last; i++){
-            fprintf(fp, "%s\t%s\t%d\n", user[i], pass[i], totpts[i]);
+            fprintf(fp, "%s\t%s\t%d\t%d\t%d\n", user[i], pass[i], e_score[i], m_score[i], h_score[i]);
         }
     }
     fclose(fp);
@@ -375,7 +462,7 @@ void retrieve() {
         printf("File error.....\n");
         return;
     }
-    while (fscanf(fp, "%s\t%s\t%d\n", user[last + 1], pass[last + 1], &totpts[last + 1]) == 3) {
+    while (fscanf(fp, "%s\t%s\t%d\t%d\t%d\n", user[last + 1], pass[last+1], &e_score[last+1], &m_score[last+1], &h_score[last+1]) == 5) {
         last++;
     }
     fclose(fp);
