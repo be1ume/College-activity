@@ -22,7 +22,6 @@ struct rec{
 rec sr[MAX];
 
 int last;
-float average;
 
 int menu();
 void init();
