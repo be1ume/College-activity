@@ -1,4 +1,8 @@
 //MARIANO-BSCS-1A
+/*  1. Add a record
+    2. Update a record
+    3.Delete a record
+    4.Display all   */
 
 #include <iostream>
 #include <string>
@@ -7,16 +11,9 @@
 
 using namespace std;
 
-/*  1. Add a record
-    2. Update a record
-    3.Delete a record
-    4.Display all   */
-
 struct rec{
         string name;
-        int q1;
-        int q2;
-        int q3;
+        int q1, q2, q3;
 };
 
 rec sr[MAX];
@@ -27,6 +24,7 @@ int menu();
 void init();
 bool isfull();
 bool isempty();
+int isdup(string n);
 int locate(string n);
 void display();
 void add(rec x);
@@ -43,6 +41,8 @@ int main() {
         switch(menu()){
             case 1: system("cls"); cin.ignore();
                     cout<<"Enter student name: "; getline(cin, temp.name);
+                    if(isdup(temp.name)){
+                        cout<<"Student already recorded..."<<endl; system("pause"); break;}
                     cout<<"Enter quiz 1: "; cin>>temp.q1;
                     cout<<"Enter quiz 2: "; cin>>temp.q2;
                     cout<<"Enter quiz 3: "; cin>>temp.q3;
@@ -81,6 +81,13 @@ bool isfull(){
     return (MAX-1==last);
 }
 
+int isdup(string n){
+    for(int i=0; i<=last; i++){
+        if(n==sr[i].name)
+        return -1;
+    } return 0;
+}
+
 bool isempty(){
     return (last==-1);
 }
@@ -98,6 +105,8 @@ void add(rec x){
         cout<<"The record is full!"<<endl; system("pause"); return; }
     last++;
     sr[last] = x;
+    cout<<"Record added successfully"<<endl;
+    system("pause");
 }
 
 void update(string n){
@@ -106,19 +115,23 @@ void update(string n){
     if(p<0){
         cout<<"Not found!"<<endl; system("pause"); return;
         }
-    cout<<"Name: "<<sr[p].name<<endl;
-    cout<<"Quiz 1: "<<sr[p].q1<<endl;
-    cout<<"Quiz 2: "<<sr[p].q2<<endl;
-    cout<<"Quiz 3: "<<sr[p].q3<<endl;
-    cout<<"To change [1-3]: ";
+    while(true){
+    system("cls");
+    cout<<"Name: "<<sr[p].name<<setw(20)<<"Average: "<<fixed<<setprecision(2)<<ave(sr[p].q1, sr[p].q2, sr[p].q3)<<endl;
+    cout<<"1. Quiz 1: "<<sr[p].q1<<endl;
+    cout<<"2. Quiz 2: "<<sr[p].q2<<endl;
+    cout<<"3. Quiz 3: "<<sr[p].q3<<endl;
+    cout<<"4. Exit"<<endl;
+    cout<<"To change [1-4]: ";
     cin>>opt;
     cout<<"Enter new Quiz "<<opt<<":";
     switch(opt){
         case 1: cin>>sr[p].q1; break;
         case 2: cin>>sr[p].q2; break;
         case 3: cin>>sr[p].q3; break;
+        case 4: return;
     }
-}
+}}
 
 void del(string n){
     int p=locate(n);
@@ -126,12 +139,13 @@ void del(string n){
         cout<<"The record is empty!"<<endl; system("pause"); return;
     }
     if(p<0)
-        cout<<"Nothing to delete!";
+        cout<<"Not found!"<<endl;
     else{
+    cout<<"Student "<<sr[p].name<<" is deleted..."<<endl;
     for(int i=p; i<=last; i++){
         sr[i] = sr[i+1];
-        last--;
-    }}
+    }last--;
+    }system("pause");
 }
 
 float ave(int x, int y, int z){
