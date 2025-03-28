@@ -22,10 +22,10 @@ int is_full();
 int is_dup();
 int locate(char n[50]);
 void game(int n);
-int add(int n);
-int sub(int n);
-int divi(int n);
-int multi(int n);
+int add(int n, int m);
+int sub(int n, int m);
+int divi(int n, int m);
+int multi(int n, int m);
 int easy();
 int medium();
 int hard();
@@ -126,7 +126,7 @@ int locate(char n[50]){
     for(int i=0; i<=last; i++){
         if(strcasecmp(user[i], n)==0)
             return i;
-    }
+    }return -1;
 }
 
 int is_full(){
@@ -146,7 +146,7 @@ void sign_up(){
     printf("Create a user name: ");
     scanf(" %[^\n]s", u);
     if(is_dup(u)==1){
-        printf("User already exist.\n");
+        printf("User already exist.....\n");
         return;
     } else if(is_full()){
         printf("Maximum users reached.....\n");
@@ -174,6 +174,11 @@ int log_in(){
     system("cls");
     printf("Enter username: ");
     scanf(" %[^\n^]s", u_int);
+
+    if(locate(u_int) == -1){
+        printf("User does not exist.....\n");
+        return 0;
+    }
     printf("Enter password: ");
     scanf(" %[^\n]s", p_int);
 
@@ -181,7 +186,7 @@ int log_in(){
         if(strcasecmp(user[i], u_int)==0){
             if(strcasecmp(pass[locate(u_int)], p_int)==0){
                 exist == 1;
-                printf("Log in succesfully....\n");
+                printf("Log in succesfully.....\n");
                 system("pause");
                 current_user = locate(u_int);
                 return 1;
@@ -192,8 +197,6 @@ int log_in(){
                 }
             }
     }
-    if(exist != 1)
-        printf("User does not exist\n");
  }
 
 void game(int n){
@@ -229,10 +232,10 @@ void game(int n){
     } else return;
 }
 
-int add(int n){
+int add(int n, int m){
     int i, c=0, a, b, ans;
-    a = rand() %n + 1;
-    b = rand() %n + 1;
+    a = rand() %n + m;
+    b = rand() %n + m;
     printf("\nWhat is %d + %d?\n->", a, b);
     scanf("%d", &ans);
     if(ans == a+b){
@@ -243,10 +246,10 @@ int add(int n){
     return c;
 }
 
-int sub(int n){
+int sub(int n, int m){
     int i, c=0, a, b, d, ans;
-    a = rand() %n + 1;
-    b = rand() %n + 1;
+    a = rand() %n + m;
+    b = rand() %n + m;
     if(b>a){
             d=a;
             a=b;
@@ -262,11 +265,11 @@ int sub(int n){
     return c;
 }
 
-int divi(int n){
+int divi(int n, int m){
     int i, c = 0, a, b, ans;
     do{
-        a = rand() %n + 1;
-        b = rand() %n + 1;
+        a = rand() %n + m;
+        b = rand() %n + m;
     }while(a%b != 0);
 
     printf("\nWhat is %d / %d?\n->", a, b);
@@ -280,10 +283,10 @@ int divi(int n){
     return c;
 }
 
-int multi(int n){
+int multi(int n, int m){
     int i, c = 0, a, b, ans;
-    a = rand() %n + 1;
-    b = rand() %n + 1;
+    a = rand() %n + m;
+    b = rand() %n + m;
     printf("\nWhat is %d * %d?\n->", a, b);
     scanf("%d", &ans);
     if(ans == a*b){
@@ -299,25 +302,25 @@ int easy(){
     int opt = arithmethic_menu();
     for(int i=0; i<1;){
     if(opt==1){
-        temp = 1*add(10);
+        temp = 1*add(10,1);
         if(temp==0)
             break;
         else
             pts += temp;
     }else if(opt==2){
-        temp = 1*sub(10);
+        temp = 1*sub(10,1);
         if(temp==0)
             break;
         else
             pts += temp;
     }else if(opt==3){
-        temp = 1*divi(10);
+        temp = 1*divi(10,1);
         if(temp==0)
             break;
         else
             pts += temp;
     }else if(opt==4){
-        temp = 1*multi(10);
+        temp = 1*multi(10,1);
         if(temp==0)
             break;
         else
@@ -343,25 +346,25 @@ int medium(){
     int opt = arithmethic_menu();
     for(int i=0; i<1;){
     if(opt==1){
-        temp = 2*add(50);
+        temp = 2*add(50,11);
         if(temp==0)
             break;
         else
             pts += temp;
     }else if(opt==2){
-        temp = 2*sub(50);
+        temp = 2*sub(50,11);
         if(temp==0)
             break;
         else
             pts += temp;
     }else if(opt==3){
-        temp = 2*divi(50);
+        temp = 2*divi(50,11);
         if(temp==0)
             break;
         else
             pts += temp;
     }else if(opt==4){
-        temp = 2*multi(50);
+        temp = 2*multi(50,11);
         if(temp==0)
             break;
         else
@@ -387,25 +390,25 @@ int hard(){
     int opt = arithmethic_menu();
     for(int i=0; i<1;){
     if(opt==1){
-        temp = 3*add(100);
+        temp = 3*add(100,21);
         if(temp==0)
             break;
         else
             pts += temp;
     }else if(opt==2){
-        temp = 3*sub(100);
+        temp = 3*sub(100,21);
         if(temp==0)
             break;
         else
             pts += temp;
     }else if(opt==3){
-        temp = 3*divi(100);
+        temp = 3*divi(100,21);
         if(temp==0)
             break;
         else
             pts += temp;
     }else if(opt==4){
-        temp = 3*multi(100);
+        temp = 3*multi(100,21);
         if(temp==0)
             break;
         else
@@ -520,3 +523,5 @@ void retrieve() {
     }
     fclose(fp);
 }
+
+
