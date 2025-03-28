@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <string.h>
-#define MAX 15
+#define MAX 10
 
 char user[MAX][50];
 char pass[MAX][50];
@@ -269,8 +269,8 @@ int divi(int n, int m){
     int i, c = 0, a, b, ans;
     do{
         a = rand() %n + m;
-        b = rand() %n + m;
-    }while(a%b != 0);
+        b = rand() %n + 2;
+    }while(a%b != 0 || a==b);
 
     printf("\nWhat is %d / %d?\n->", a, b);
     scanf("%d", &ans);
