@@ -1,3 +1,5 @@
+//MARIANO, BSCS-1A
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
@@ -10,6 +12,7 @@ int e_score[MAX], m_score[MAX], h_score[MAX];
 int add_score[MAX], sub_score[MAX], divi_score[MAX], multi_score[MAX];
 int last;
 int current_user;
+char loggedInUsername[50];
 float ave;
 
 void init();
@@ -29,9 +32,15 @@ int multi(int n, int m);
 int easy();
 int medium();
 int hard();
+void sort_in(int i, int j);
 void sort();
 void leaderboard();
 void inner_leaderboard(char op);
+void leaderboard_op(char op);
+void l_add();
+void l_sub();
+void l_divi();
+void l_multi();
 void save();
 void retrieve();
 float average(int e, int m, int h);
@@ -39,8 +48,6 @@ float average(int e, int m, int h);
 int main(){
     char opt;
     int n;
-    char p_int[50];
-    char u_int[50];
     init();
     retrieve();
 
@@ -62,6 +69,7 @@ int main(){
                 inner_leaderboard(opt);
                 break;
             case 4:
+                printf("Saved successfully.....\n");
                 save();
                 exit(0);
             default:
@@ -77,10 +85,10 @@ int menu(){
     printf("========================================\n");
     printf("|              MAIN MENU               |\n");
     printf("========================================\n");
-    printf("     1. Sign up                       \n");
-    printf("     2. Log in                        \n");
-    printf("     3. Leader board                  \n");
-    printf("     4. Exit                          \n");
+    printf("     1. Sign Up                       \n");
+    printf("     2. Log In                        \n");
+    printf("     3. Leaderboard                  \n");
+    printf("     4. Save and Quit                 \n");
     printf("     Enter 1-4 to choose              \n");
     printf("========================================\n->");
     scanf("%d", &op);
@@ -93,10 +101,11 @@ int game_menu(){
     printf("|           Choose difficulty          |\n");
     printf("========================================\n");
     printf("  USER: %s \n  Easy: %d\tMedium: %d\tHard: %d\n", user[current_user], e_score[current_user], m_score[current_user], h_score[current_user]);
-    printf("     \e[32m1. Easy\e[0m\n");
-    printf("     \e[38;5;208m2. Medium\e[0m\n");
-    printf("     \e[31m3. Hard\e[0m\n");
-    printf("     4. Exit\n");
+    printf("     \e[32m1. Easy     \e[0m(10 points)\n");
+    printf("     \e[38;5;208m2. Medium   \e[0m(20 points)\n");
+    printf("     \e[31m3. Hard     \e[0m(30 points)\n");
+    printf("     4. Leaderboard\n");
+    printf("     5. Save and Quit\n");
     printf("========================================\n->");
     scanf("%d", &opt);
     return opt;
@@ -143,19 +152,21 @@ int is_dup(char n[]){
 void sign_up(){
     char u[50];
     system("cls");
+    printf("===Sign Up to create an account===\n\n");
     printf("Create a user name: ");
     scanf(" %[^\n]s", u);
     if(is_dup(u)==1){
-        printf("User already exist.....\n");
+        printf("\nUser already exist.....\n");
         return;
     } else if(is_full()){
-        printf("Maximum users reached.....\n");
+        printf("\nMaximum users reached.....\n");
         return;
     } else{
     last++;
     strcpy(user[last], u);
     printf("Create password: ");
     scanf(" %[^\n]s", pass[last]);
+    printf("\nUser created successfully...\n");
     e_score[last] = 0;
     m_score[last] = 0;
     h_score[last] = 0;
@@ -172,11 +183,12 @@ int log_in(){
     char p_int[50];
 
     system("cls");
+    printf("===Log In to proceed the Game===\n\n");
     printf("Enter username: ");
-    scanf(" %[^\n^]s", u_int);
+    scanf(" %[^\n]s", u_int);
 
     if(locate(u_int) == -1){
-        printf("User does not exist.....\n");
+        printf("\nUser does not exist.....\n");
         return 0;
     }
     printf("Enter password: ");
@@ -186,13 +198,14 @@ int log_in(){
         if(strcasecmp(user[i], u_int)==0){
             if(strcasecmp(pass[locate(u_int)], p_int)==0){
                 exist == 1;
-                printf("Log in succesfully.....\n");
+                printf("\nLogged in succesfully.....\n");
                 system("pause");
                 current_user = locate(u_int);
+                strcpy(loggedInUsername, user[current_user]);
                 return 1;
             }
             else{
-                printf("Wrong password.....\n");
+                printf("\nWrong password.....\n");
                 return 0;
                 }
             }
@@ -200,6 +213,7 @@ int log_in(){
  }
 
 void game(int n){
+    int opt;
     char sel;
     if(n==1){
         system("cls");
@@ -208,6 +222,7 @@ void game(int n){
         scanf(" %c", &sel);
         if(sel=='y'){
             while(1){
+                current_user = locate(loggedInUsername);
                 system("cls");
                 switch(game_menu()){
                     case 1:
@@ -223,6 +238,12 @@ void game(int n){
                         h_score[current_user] += hard();
                         break;
                     case 4:
+                        system("cls"); leaderboard();
+                        printf("View individual operation? [y/n]:   ");
+                        scanf(" %c", &opt);
+                        leaderboard_op(opt);
+                        break;
+                    case 5:
                         system("cls");
                         leaderboard();
                         return;
@@ -300,6 +321,8 @@ int multi(int n, int m){
 int easy(){
     int temp, pts=0;
     int opt = arithmethic_menu();
+    system("cls");
+    printf("Note! The operation wont stop until you get a wrong answer!\n");
     for(int i=0; i<1;){
     if(opt==1){
         temp = 1*add(10,1);
@@ -336,7 +359,7 @@ int easy(){
         divi_score[current_user] += pts;
     if(opt==4)
         multi_score[current_user] += pts;
-    printf("\nYou've got %d pts\n", pts);
+    printf("\n==== Game Over! Total score for the round: %d ====\n", pts);
     system("pause");
     return pts;
 }
@@ -344,6 +367,8 @@ int easy(){
 int medium(){
     int temp, pts=0;
     int opt = arithmethic_menu();
+    system("cls");
+    printf("Note! The operation wont stop until you get a wrong answer!\n");
     for(int i=0; i<1;){
     if(opt==1){
         temp = 2*add(50,11);
@@ -380,7 +405,7 @@ int medium(){
         divi_score[current_user] += pts;
     if(opt==4)
         multi_score[current_user] += pts;
-    printf("\nYou've got %d pts\n", pts);
+    printf("\n==== Game Over! Total score for the round: %d ====\n", pts);
     system("pause");
     return pts;
 }
@@ -388,6 +413,8 @@ int medium(){
 int hard(){
     int temp, pts=0;
     int opt = arithmethic_menu();
+    system("cls");
+    printf("Note! The operation wont stop until you get a wrong answer!\n");
     for(int i=0; i<1;){
     if(opt==1){
         temp = 3*add(100,21);
@@ -424,30 +451,34 @@ int hard(){
         divi_score[current_user] += pts;
     if(opt==4)
         multi_score[current_user] += pts;
-    printf("\nYou've got %d pts\n", pts);
+    printf("\n==== Game Over! Total score for the round: %d ====\n", pts);
     system("pause");
     return pts;
 }
 
+void sort_in(int i, int j){
+    char user_temp[50];
+    char pass_temp[50];
+    int temp;
+    strcpy(user_temp, user[j]); strcpy(user[j], user[j+1]); strcpy(user[j+1], user_temp);
+    strcpy(pass_temp, pass[j]); strcpy(pass[j], pass[j+1]); strcpy(pass[j+1], pass_temp);
+    temp = e_score[j]; e_score[j] = e_score[j+1]; e_score[j+1] = temp;
+    temp = m_score[j]; m_score[j] = m_score[j+1]; m_score[j+1] = temp;
+    temp = h_score[j]; h_score[j] = h_score[j+1]; h_score[j+1] = temp;
+    temp = add_score[j]; add_score[j] = add_score[j+1]; add_score[j+1] = temp;
+    temp = sub_score[j]; sub_score[j] = sub_score[j+1]; sub_score[j+1] = temp;
+    temp = divi_score[j]; divi_score[j] = divi_score[j+1]; divi_score[j+1] = temp;
+    temp = multi_score[j]; multi_score[j] = multi_score[j+1]; multi_score[j+1] = temp;
+}
 
 void sort(){
     int i, j, a, b, temp;
-    char user_temp[50];
-    char pass_temp[50];
     for(i=0; i<=last; i++){
         for(j=0; j<last-i; j++){
             a = average(e_score[j], m_score[j], h_score[j]);
             b = average(e_score[j+1], m_score[j+1], h_score[j+1]);
             if(a<b){
-                strcpy(user_temp, user[j]); strcpy(user[j], user[j+1]); strcpy(user[j+1], user_temp);
-                strcpy(pass_temp, pass[j]); strcpy(pass[j], pass[j+1]); strcpy(pass[j+1], pass_temp);
-                temp = e_score[j]; e_score[j] = e_score[j+1]; e_score[j+1] = temp;
-                temp = m_score[j]; m_score[j] = m_score[j+1]; m_score[j+1] = temp;
-                temp = h_score[j]; h_score[j] = h_score[j+1]; h_score[j+1] = temp;
-                temp = add_score[j]; add_score[j] = add_score[j+1]; add_score[j+1] = temp;
-                temp = sub_score[j]; sub_score[j] = sub_score[j+1]; sub_score[j+1] = temp;
-                temp = divi_score[j]; divi_score[j] = divi_score[j+1]; divi_score[j+1] = temp;
-                temp = multi_score[j]; multi_score[j] = multi_score[j+1]; multi_score[j+1] = temp;
+                sort_in(i,j);
             }
         }
     }
@@ -459,43 +490,171 @@ float average(int e, int m, int h){
 
 void leaderboard(){
     printf("=====================\e[38;2;255;255;255mLEADERBOARD\e[0m=====================\n");
-    printf("| Top | Name            Easy\tMedium\tHard\tXP  |\n");
+    printf("| Rank | Name           Easy\tMedium\tHard\tXP  |\n");
     printf("=====================================================\n");
     for(int i=0; i<=last; i++){
         sort();
         if(i==0)
-            printf("\e[38;2;255;255;0m   %d.\t%s\t\t%d\t%d\t%d\t%.2f\t\n\e[0m",i+1, user[i], e_score[i], m_score[i], h_score[i], average(e_score[i], m_score[i], h_score[i]));
+            printf("\e[38;2;255;255;0m   %d\t%s\t\t%d\t%d\t%d\t%.2f\t\n\e[0m",i+1, user[i], e_score[i], m_score[i], h_score[i], average(e_score[i], m_score[i], h_score[i]));
         else if(i==1)
-            printf("\e[38;2;255;255;255m   %d.\t%s\t\t%d\t%d\t%d\t%.2f\t\n\e[0m",i+1, user[i], e_score[i], m_score[i], h_score[i], average(e_score[i], m_score[i], h_score[i]));
+            printf("\e[38;2;255;255;255m   %d\t%s\t\t%d\t%d\t%d\t%.2f\t\n\e[0m",i+1, user[i], e_score[i], m_score[i], h_score[i], average(e_score[i], m_score[i], h_score[i]));
         else if(i==2)
-            printf("\e[38;5;180m   %d.\t%s\t\t%d\t%d\t%d\t%.2f\t\n\e[0m",i+1, user[i], e_score[i], m_score[i], h_score[i], average(e_score[i], m_score[i], h_score[i]));
+            printf("\e[38;5;180m   %d\t%s\t\t%d\t%d\t%d\t%.2f\t\n\e[0m",i+1, user[i], e_score[i], m_score[i], h_score[i], average(e_score[i], m_score[i], h_score[i]));
         else
-            printf("\e[38;2;128;128;128m   %d.\t%s\t\t%d\t%d\t%d\t%.2f\t\n\e[0m",i+1, user[i], e_score[i], m_score[i], h_score[i], average(e_score[i], m_score[i], h_score[i]));
+            printf("\e[38;2;128;128;128m   %d\t%s\t\t%d\t%d\t%d\t%.2f\t\n\e[0m",i+1, user[i], e_score[i], m_score[i], h_score[i], average(e_score[i], m_score[i], h_score[i]));
         }
      printf("=====================================================\n");
 }
 
 void inner_leaderboard(char op){
-    int n;
+    int n, opt;
     if(op=='y'){
-        printf("->");
+        printf("Choose user to view:\t");
         scanf("%d", &n);
     system("cls");
     printf("========================================\n");
     printf("               %s                 \n", user[n-1]);
     printf("========================================\n");
     printf("  \e[32mEasy:\e[0m %d\t\e[38;5;208mMedium:\e[0m %d\t\e[31mHard:\e[0m %d\n", e_score[n-1], m_score[n-1], h_score[n-1]);
-    printf("  \e[33mAddition:\e[0m\t\t%d\n", add_score[n-1]);
-    printf("  \e[34mSubtraction:\e[0m\t\t%d\n", sub_score[n-1]);
-    printf("  \e[32mDivision:\e[0m \t\t%d\n", divi_score[n-1]);
-    printf("  \e[35mMultiplication\e[0m\t%d\n", multi_score[n-1]);
+    printf("  \e[33m1. Addition:\e[0m\t\t%d\n", add_score[n-1]);
+    printf("  \e[34m2. Subtraction:\e[0m\t%d\n", sub_score[n-1]);
+    printf("  \e[32m3. Division:\e[0m \t\t%d\n", divi_score[n-1]);
+    printf("  \e[35m4. Multiplication\e[0m\t%d\n", multi_score[n-1]);
+    printf("  5. Exit\n");
     printf("========================================\n");
+    printf("Choose operation to view:\t");
+    scanf("%d", &opt);
+    switch(opt){
+        case 1: system("cls"); l_add(); break;
+        case 2: l_sub(); break;
+        case 3: l_divi(); break;
+        case 4: l_multi(); break;
+        case 5: return;
+    }
+    return;
     }
 }
-/*printf("     ");
-    printf("     \n");
-    printf("     \n");
-    printf("     \n");*/
+
+void leaderboard_op(char op){
+    int opt;
+    if(op=='y'){
+    system("cls");
+    printf("========================================\n");
+    printf("            \e[38;2;255;255;255mLEADERBOARD\e[0m\n");
+    printf("========================================\n");
+    printf("     \e[33m1. Addition:\e[0m\n");
+    printf("     \e[34m2. Subtraction:\e[0m\n");
+    printf("     \e[32m3. Division:\e[0m\n");
+    printf("     \e[35m4. Multiplication\e[0m\n");
+    printf("     5. Exit\n");
+    printf("========================================\n");
+    printf("Choose operation to view:\n->");
+    scanf("%d", &opt);
+    switch(opt){
+        case 1: system("cls"); l_add(); break;
+        case 2: l_sub(); break;
+        case 3: l_divi(); break;
+        case 4: l_multi(); break;
+        case 5: return;
+    }
+    return;
+    }
+}
+
+void l_add() {
+    system("cls");
+    int i, j, temp;
+    for (i = 0; i <= last; i++) {
+        for (j = 0; j < last - i; j++) {
+            if (add_score[j] < add_score[j + 1]) {
+                sort_in(i,j);
+            }
+        }
+    }
+    printf("=============\e[38;2;255;255;255mADDITION\e[0m============\n");
+    printf("| Rank | Name\t\tScore  |\n");
+    printf("=================================\n");
+    for (i = 0; i <= last; i++) {
+        if(i==0) printf("\e[38;2;255;255;0m   %d\t %s\t\t%d\n\e[0m", i + 1, user[i], add_score[i]);
+        else if(i==1) printf("\e[38;2;255;255;255m   %d\t %s\t\t%d\n\e[0m", i + 1, user[i], add_score[i]);
+        else if(i==2) printf("\e[38;5;180m   %d\t %s\t\t%d\n\e[0m", i + 1, user[i], add_score[i]);
+        else printf("\e[38;2;128;128;128m   %d\t %s\t\t%d\n\e[0m", i + 1, user[i], add_score[i]);
+    }
+    printf("=================================\n");
+    system("pause");
+}
+
+void l_sub() {
+    system("cls");
+    int i, j, temp;
+    for (i = 0; i <= last; i++) {
+        for (j = 0; j < last - i; j++) {
+            if (sub_score[j] < sub_score[j + 1]) {
+                sort_in(i,j);
+            }
+        }
+    }
+    printf("===========\e[38;2;255;255;255mSUBTRACTION\e[0m===========\n");
+    printf("| Rank | Name\t\tScore  |\n");
+    printf("=================================\n");
+    for (i = 0; i <= last; i++) {
+        if(i==0) printf("\e[38;2;255;255;0m   %d\t %s\t\t%d\n\e[0m", i + 1, user[i], sub_score[i]);
+        else if(i==1) printf("\e[38;2;255;255;255m   %d\t %s\t\t%d\n\e[0m", i + 1, user[i], sub_score[i]);
+        else if(i==2) printf("\e[38;5;180m   %d\t %s\t\t%d\n\e[0m", i + 1, user[i], sub_score[i]);
+        else printf("\e[38;2;128;128;128m   %d\t %s\t\t%d\n\e[0m", i + 1, user[i], sub_score[i]);
+    }
+    printf("=================================\n");
+    system("pause");
+}
+
+void l_divi() {
+    system("cls");
+    int i, j, temp;
+    for (i = 0; i <= last; i++) {
+        for (j = 0; j < last - i; j++) {
+            if (divi_score[j] < divi_score[j + 1]) {
+                sort_in(i,j);
+            }
+        }
+    }
+    printf("=============\e[38;2;255;255;255mDIVISION\e[0m===========\n");
+    printf("| Rank | Name\t\tScore  |\n");
+    printf("=================================\n");
+    for (i = 0; i <= last; i++) {
+        if(i==0) printf("\e[38;2;255;255;0m   %d\t %s\t\t%d\n\e[0m", i + 1, user[i], divi_score[i]);
+        else if(i==1) printf("\e[38;2;255;255;255m   %d\t %s\t\t%d\n\e[0m", i + 1, user[i], divi_score[i]);
+        else if(i==2) printf("\e[38;5;180m   %d\t %s\t\t%d\n\e[0m", i + 1, user[i], divi_score[i]);
+        else printf("\e[38;2;128;128;128m   %d\t %s\t\t%d\n\e[0m", i + 1, user[i], divi_score[i]);
+    }
+    printf("=================================\n");
+    system("pause");
+}
+
+void l_multi() {
+    system("cls");
+    int i, j, temp;
+    for (i = 0; i <= last; i++) {
+        for (j = 0; j < last - i; j++) {
+            if (multi_score[j] < multi_score[j + 1]) {
+                sort_in(i,j);
+            }
+        }
+    }
+    printf("==========\e[38;2;255;255;255mMULTIPLICATION\e[0m=========\n");
+    printf("| Rank | Name\t\tScore  |\n");
+    printf("=================================\n");
+    for (i = 0; i <= last; i++) {
+        if(i==0) printf("\e[38;2;255;255;0m   %d\t %s\t\t%d\n\e[0m", i + 1, user[i], multi_score[i]);
+        else if(i==1) printf("\e[38;2;255;255;255m   %d\t %s\t\t%d\n\e[0m", i + 1, user[i], multi_score[i]);
+        else if(i==2) printf("\e[38;5;180m   %d\t %s\t\t%d\n\e[0m", i + 1, user[i], multi_score[i]);
+        else printf("\e[38;2;128;128;128m   %d\t %s\t\t%d\n\e[0m", i + 1, user[i], multi_score[i]);
+    }
+    printf("=================================\n");
+    system("pause");
+}
+
+
+
 void save(){
     FILE *fp;
     int i;
@@ -518,10 +677,8 @@ void retrieve() {
         printf("File error.....\n");
         return;
     }
-    while (fscanf(fp, "%s\t%s\t%d\t%d\t%d\t%d\t%d\t%d\t%d\n", user[last + 1], pass[last+1], &e_score[last+1], &m_score[last+1], &h_score[last+1], &add_score[last+1], &sub_score[last+1], &divi_score[last+1], &multi_score[last+1]) == 9) {
+    while (fscanf(fp, "%[^\t]\t%[^\t]\t%d\t%d\t%d\t%d\t%d\t%d\t%d\n", user[last+1], pass[last+1], &e_score[last+1], &m_score[last+1], &h_score[last+1], &add_score[last+1], &sub_score[last+1], &divi_score[last+1], &multi_score[last+1]) == 9) {
         last++;
     }
     fclose(fp);
 }
-
-
