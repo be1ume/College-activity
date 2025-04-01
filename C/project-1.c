@@ -197,7 +197,6 @@ int log_in(){
     for(int i=0; i<=last; i++){
         if(strcasecmp(user[i], u_int)==0){
             if(strcasecmp(pass[locate(u_int)], p_int)==0){
-                exist == 1;
                 printf("\nLogged in succesfully.....\n");
                 system("pause");
                 current_user = locate(u_int);
@@ -254,7 +253,8 @@ void game(int n){
 }
 
 int add(int n, int m){
-    int i, c=0, a, b, ans;
+    int c=0, a, b, ans;
+    srand(time(NULL));
     a = rand() %n + m;
     b = rand() %n + m;
     printf("\nWhat is %d + %d?\n->", a, b);
@@ -268,7 +268,8 @@ int add(int n, int m){
 }
 
 int sub(int n, int m){
-    int i, c=0, a, b, d, ans;
+    int c=0, a, b, d, ans;
+    srand(time(NULL));
     a = rand() %n + m;
     b = rand() %n + m;
     if(b>a){
@@ -287,7 +288,8 @@ int sub(int n, int m){
 }
 
 int divi(int n, int m){
-    int i, c = 0, a, b, ans;
+    int c = 0, a, b, ans;
+    srand(time(NULL));
     do{
         a = rand() %n + m;
         b = rand() %n + 2;
@@ -305,7 +307,8 @@ int divi(int n, int m){
 }
 
 int multi(int n, int m){
-    int i, c = 0, a, b, ans;
+    int c = 0, a, b, ans;
+    srand(time(NULL));
     a = rand() %n + m;
     b = rand() %n + m;
     printf("\nWhat is %d * %d?\n->", a, b);
@@ -472,7 +475,7 @@ void sort_in(int i, int j){
 }
 
 void sort(){
-    int i, j, a, b, temp;
+    int i, j, a, b;
     for(i=0; i<=last; i++){
         for(j=0; j<last-i; j++){
             a = average(e_score[j], m_score[j], h_score[j]);
@@ -563,7 +566,7 @@ void leaderboard_op(char op){
 
 void l_add() {
     system("cls");
-    int i, j, temp;
+    int i, j;
     for (i = 0; i <= last; i++) {
         for (j = 0; j < last - i; j++) {
             if (add_score[j] < add_score[j + 1]) {
@@ -586,7 +589,7 @@ void l_add() {
 
 void l_sub() {
     system("cls");
-    int i, j, temp;
+    int i, j;
     for (i = 0; i <= last; i++) {
         for (j = 0; j < last - i; j++) {
             if (sub_score[j] < sub_score[j + 1]) {
@@ -609,7 +612,7 @@ void l_sub() {
 
 void l_divi() {
     system("cls");
-    int i, j, temp;
+    int i, j;
     for (i = 0; i <= last; i++) {
         for (j = 0; j < last - i; j++) {
             if (divi_score[j] < divi_score[j + 1]) {
@@ -632,7 +635,7 @@ void l_divi() {
 
 void l_multi() {
     system("cls");
-    int i, j, temp;
+    int i, j;
     for (i = 0; i <= last; i++) {
         for (j = 0; j < last - i; j++) {
             if (multi_score[j] < multi_score[j + 1]) {
