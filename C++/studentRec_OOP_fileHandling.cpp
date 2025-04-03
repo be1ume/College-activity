@@ -162,13 +162,13 @@ void Person::retrieve() {
     }
 
     inFile >> last;
-    inFile.ignore(); // Consume the newline character after reading 'last'
+    inFile.ignore();
 
-    if (last >= 0) { // Check if there are any records to read
+    if (last >= 0) {
         for (int i = 0; i <= last; i++) {
             getline(inFile, student[i].name);
             inFile >> student[i].q1 >> student[i].q2 >> student[i].q3;
-            inFile.ignore(); // Consume the newline character after reading q1, q2, q3
+            inFile.ignore();
         }
     }
 
