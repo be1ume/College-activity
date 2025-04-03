@@ -154,24 +154,21 @@ void Person::save(){
     cout<<"Data saved successfully. . ."<<endl;
 }
 
-void Person::retrieve() {
+void Person::retrieve(){
     ifstream inFile("student_record.txt");
-    if (!inFile) {
-        cout << "Error opening file" << endl;
+    if(!inFile){
+        cout<<"Error opening file"<<endl;
         return;
     }
-
     inFile >> last;
     inFile.ignore();
-
-    if (last >= 0) {
-        for (int i = 0; i <= last; i++) {
+    if(last>=0){
+        for(int i=0; i<=last; i++){
             getline(inFile, student[i].name);
-            inFile >> student[i].q1 >> student[i].q2 >> student[i].q3;
+            inFile>>student[i].q1>>student[i].q2>>student[i].q3;
             inFile.ignore();
         }
     }
-
     inFile.close();
     cout<<"Data retrieved successfully"<<endl;
     system("pause");
