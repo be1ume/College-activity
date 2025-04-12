@@ -4,7 +4,14 @@
 #define MAX 2
 using namespace std;
 
-class User{
+class Functions{
+    virtual void init()=0;
+    virtual bool isFull()=0;
+    virtual bool isDuplicate(string name)=0;
+    virtual int locate(string name)=0;
+};
+
+class User : Functions{
 private:
     struct Player{
     string username;
@@ -12,12 +19,12 @@ private:
     };
     struct Scores{
     int Es, Ms, Hs;
-    //int As, Ss, Ds, Ms;
+    int Ads, Sus, Divs, Muls;
     };
     Player  player[MAX];
     Scores score[MAX];
 protected:
-    int last = -1;
+    int last;
     string activeUser;
     int currentUser;
 public:
@@ -32,8 +39,21 @@ public:
     void setMscore(int score){this->score[last].Ms = score;}
     int getHscore(int position){return score[position].Hs;}
     void setHscore(int score){this->score[last].Hs = score;}
+    int getAddScore(int position){return score[position].Ads;}
+    void setAddScore(int score){this->score[last].Ads = score;}
+    int getSubScore(int position){return score[position].Sus;}
+    void setSubScore(int score){this->score[last].Sus = score;}
+    int getDivScore(int position){return score[position].Divs;}
+    void setDivScore(int score){this->score[last].Divs = score;}
+    int getMulScore(int position){return score[position].Muls;}
+    void setMulScore(int score){this->score[last].Muls = score;}
 
+    void setLast(){last++;}
+    int getLast(){return last;}
 
+    void init(){
+        last = -1;
+    }
     bool isDuplicate(string name){
         for(int i=0; i<=last; i++){
             if(name == getUsername(i))
@@ -83,12 +103,14 @@ public:
         }else if(isFull()){
             cout<<"\nMaximum users reached....."<<endl; return;
         }else{
-        last++;
+        setLast();
         setUsername(temp_username);
         cout<<"Create Password: ";
         getline(cin>>ws, temp_password);
         setPassword(temp_password);
+        cout << "User signed up successfully. . ."<< endl;
         setEscore(0); setMscore(0); setHscore(0);
+        setAddScore(0); setSubScore(0); setDivScore(0); setMulScore(0);
         }
     }
 
@@ -111,10 +133,8 @@ public:
                     activeUser = user_input;
                     return 1;
                 }
-            }else{
-                cout<<"\nWrong password. . ."<<endl; return 0;
             }
-        }return 0;
+        }cout<<"\nWrong password. . ."<<endl; return 0;
     }
 
     void display(){displayAll();}
@@ -143,25 +163,42 @@ public:
     return op;
     }
 
-
+    void leaderboard(){
+        cout<<"=============LEADERBOARD============"<<endl;
+        cout<<"| RANK | NAME       | PASS       | E   | M   | H   |"<<endl;
+        cout<<"=================="<<last<<activeUser<<"=================="<<endl;
+        for(int i=0; i<=last; i++){
+            cout<<"| "<<left<<setw(4)<<i+1<<" | "
+                <<left<<setw(10)<<getUsername(i)<<" | "
+                <<left<<setw(10)<<getPassword(i)<<" | "
+                <<left<<setw(3)<<getEscore(i)<<" | "
+                <<left<<setw(3)<<getMscore(i)<<" | "
+                <<left<<setw(3)<<getHscore(i)<<" |"<<endl;
+        }
+        cout<<"===================================="<<endl;
+    }
 };
 
 int main(){
     Homepage startUp;
     Displays disp;
     int opt, n;
+    startUp.init();
+    cout<<startUp.last;
     while(true){
         system("cls");
         switch(disp.menu()){
             case 1:
                 startUp.signUp();
+                system("pause");
                 break;
             case 2:
                 n = startUp.logIn();
-                 system("pause");
+
+                system("pause");
                 break;
             case 3:
-                startUp.display();
+                disp.leaderboard();
                 system("pause");
                 break;
             case 4:
