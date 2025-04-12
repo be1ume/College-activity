@@ -11,7 +11,7 @@
 
 using namespace std;
 
-bool caseComp(string& s1, string& s2){
+bool caseComp(string& s1, string& s2){      //checks the string without being case sensitive
     if(s1.length() != s2.length()){
         return false;
     }
@@ -22,11 +22,12 @@ bool caseComp(string& s1, string& s2){
     }return true;
 }
 
+//forward declaration of classes
 class User;
 class Game;
 class Displays;
 
-class Functions{
+class Functions{        //abstraction and polymorphism for quick access of functions that are often needed for my code
 public:
     virtual void init() = 0;
     virtual bool isFull() = 0;
@@ -35,8 +36,8 @@ public:
     virtual ~Functions(){}
 };
 
-class User : public Functions{
-protected:
+class User : public Functions{      //This class focuses on the user functions - user class inheritance from function
+protected:                          //protected so other class inheriting this class can access
     struct PlayerData{
         string username;
         string password;
@@ -44,7 +45,7 @@ protected:
         int Ads = 0, Sus = 0, Divs = 0, Muls = 0;
     };
 
-    PlayerData data[MAX];
+    PlayerData data[MAX];           //encapsulation of data
     int last;
     string activeUser;
     int currentUser;
@@ -83,6 +84,7 @@ public:
         }return -1;
     }
 
+    //getter and setters for access to data members
     string getUsername(int position){ return data[position].username; }
     string getPassword(int position){ return data[position].password; }
     int getEscore(int position){ return data[position].Es; }
@@ -225,7 +227,7 @@ public:
     }
 };
 
-
+//This class focuses on functions of the main menu
 class Homepage : virtual public User {
 public:
     void signUp(){
@@ -293,6 +295,7 @@ public:
     }
 };
 
+//this class is for displays
 class Displays : virtual public User {
 public:
     int mainMenu(){
@@ -466,6 +469,7 @@ public:
     }
 };
 
+//this is the main class for the game mechanics and operations
 class Game : virtual public User, public Displays {
 
 private:
@@ -714,6 +718,7 @@ public:
     }
 };
 
+//this class organize and is the main of the entire program
 class Application : public Homepage, public Game {
 public:
     Application(){
@@ -767,7 +772,7 @@ public:
                     cout << "Data saved. Exiting program." << endl;
                     return;
                 default:
-                    cout << "Invalid option detected in main loop." << endl;
+                    cout << "Invalid option 1-4 only." << endl;
                     system("pause");
             }
         }
