@@ -46,7 +46,7 @@ def update_rec(name):
                           )
                     opt = int(input("Choose [1-4]: "))
 
-                    match (opt):
+                    match opt:
                         case 1:
                             updated_q1 = int(input("Enter New Value of Quiz 1: "))
                             rec["q1"] = updated_q1
@@ -79,6 +79,11 @@ def display_rec(name):
                   f"Quiz 2: {rec["q2"]}\n"
                   f"Quiz 3: {rec["q3"]}"
                   )
+            print(f"Average: {ave(rec["q1"], rec["q2"], rec["q3"]):.2f}")
+            if ave(rec["q1"], rec["q2"], rec["q3"]) >= 75:
+                print("Remark: PASSED")
+            else:
+                print("Remark: FAILED")
             return
     print(f"Record of {name} not found!")
 
@@ -86,7 +91,7 @@ def display():
     print("{:<3} {:<10} {:<10} {:<10} {:<10} {:<10} {:<10}".format("ID", "NAME", "QUIZ1", "QUIZ2", "QUIZ3", "AVERAGE", "REMARKS"))
 
     for index, rec in enumerate(students):
-        print("{:<3} {:<10} {:<10} {:<10} {:<10} {:<10} {:<10}".format\
+        print("{:<3} {:<10} {:<10} {:<10} {:<10} {:<10.2f} {:<10}".format\
         (index+1, rec["name"], rec["q1"], rec["q2"],
         rec["q3"], ave(rec["q1"], rec["q2"], rec["q3"]),
         "PASSED" if ave(rec["q1"], rec["q2"], rec["q3"]) >= 75 else "FAILED"))
