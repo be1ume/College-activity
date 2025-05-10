@@ -7,15 +7,14 @@ def print_board(board):
         print("-" * 10)
 
 def check_winner(board, player):
-    # Check rows, columns, and diagonals
     for i in range(3):
-        if all([cell == player for cell in board[i]]):  # Rows
+        if all([cell == player for cell in board[i]]):
             return True
-        if all([board[j][i] == player for j in range(3)]):  # Columns
+        if all([board[j][i] == player for j in range(3)]):
             return True
-    if all([board[i][i] == player for i in range(3)]):  # Main diagonal
+    if all([board[i][i] == player for i in range(3)]):
         return True
-    if all([board[i][2 - i] == player for i in range(3)]):  # Anti-diagonal
+    if all([board[i][2 - i] == player for i in range(3)]):
         return True
     return False
 
@@ -126,8 +125,6 @@ def play_game():
             print("It's a draw!")
             break
 
-        # Switch player
         current_player = 'O' if current_player == 'X' else 'X'
 
-# Start the game
 play_game()
