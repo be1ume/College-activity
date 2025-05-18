@@ -1,4 +1,3 @@
-#MARIANO - BSCS-1A
 import os
 MAX = 5
 
