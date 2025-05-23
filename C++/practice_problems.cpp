@@ -26,7 +26,7 @@ public:
                 return 1 + r_occurance_number(arr, len-1, target);
             }return r_occurance_number(arr, len-1, target);
         }else
-            return r_occurance_number(arr, len-1, target);
+            return 0;
     }
 };
 
@@ -58,21 +58,20 @@ public:
 
 class Palindrome{
 public:
-    bool i_palindrome(string word){
-        int len = word.size();
+    bool i_palindrome(int arr[], int len){
         for(int i=0; i<len/2; i++){
-            if(word[i]!=word[len-i-1])
+            if(arr[i]!=arr[len-i-1])
                 return false;
         } return true;
     }
 
-    bool r_palindrome(string word, int left, int right){
-        if(left==right)
+    bool r_palindrome(int arr[], int left, int right){
+        if(left>=right)
             return true;
-        if(word[left]!=word[right])
+        if(arr[left]!=arr[right])
             return false;
         else
-            return r_palindrome(word, left+1, right-1);
+            return r_palindrome(arr, left+1, right-1);
     }
 };
 
@@ -85,108 +84,140 @@ private:
 public:
     int menu(){
         int opt;
-        cout<<"1. Iterative sorted in descending\n2. Recursive Count Occurance\n3. Iterative find smallest"<<endl;
-        cout<<"4. Recursive find smallest\n5. Palindrome Iterative method\n6. Palindrome Recursive method\n7. Exit\n[1-7]->";
+        cout<<"----------------------------Practice Problems-----------------------------\n";
+        cout<<"1. iterative method to determine if array is sorted in descending order.\n";
+        cout<<"2. recursive method to count the occurrence of a number in an array\n";
+        cout<<"3. iterative method to find the smallest element in an array\n";
+        cout<<"4. recursive method to find the smallest element in an array\n";
+        cout<<"5. iterative method to check if the array is PALINDROME\n";
+        cout<<"6. recursive method to check if the array is PALINDROME\n";
+        cout<<"7. change the array\n";
+        cout<<"8. Exit\n";
+        cout<<"--------------------------------------------------------------------------\n";
+        cout<<"[1-8]-> ";
         cin>>opt;
         return opt;
     }
 
     void cases(){
+        const int MAX = 10;
+        int arr[MAX];
+        int len;
+        int target;
+        cout<<"Enter size of your array (max 10): ";
+        cin>>len;
+        cout<<"Enter elements: ";
+        for(int i=0; i<len; i++) {
+            cin>>arr[i];
+        }
         while(true){
             system("cls");
             switch(menu()){
-                case 1:{
+                case 1:
                     system("cls");
-                    cout<<"--Check if the array is sorted in descending order."<<endl;
-                    int arr[]={};
-                    int len;
-                    cout<<"Enter number of your array: ";
-                    cin>>len;
-                    cout<<"Enter numbers: ";
+                    cout<<"--Check if the array is sorted in descending order.--"<<endl;
+                    cout<<"Your array is [ ";
                     for(int i=0; i<len; i++){
-                        cin>>arr[i];
-                    }
+                        cout<<arr[i]<<" ";
+                        if (i<len-1)
+                            cout<<", ";
+                    } cout<<"]\n";
                     if(sortcheck.iterative_sorted(arr, len))
                         cout<<"The array is sorted in descending order."<<endl;
                     else
                         cout<<"The array is not sorted in descending order."<<endl;
                     system("pause");
                     break;
-                }
 
-                case 2:{
+                case 2:
                     system("cls");
                     cout<<"--recursive method to count the occurrence--"<<endl;
-                    int arr[] = {1,1,2,3,3,3,4,5,5,6,6,7,8,9,9};
-                    int len = sizeof(arr)/sizeof(arr[0]);
-                    int target;
+                    cout<<"Your array is [ ";
+                    for(int i=0; i<len; i++){
+                        cout<<arr[i]<<" ";
+                        if (i<len-1)
+                            cout<<", ";
+                    } cout<<"]\n";
                     cout<<"Enter target number: ";
                     cin>>target;
                     cout<<"The number "<<target<<" Occurred "<<occurance.r_occurance_number(arr, len, target)<<" times!"<<endl;
                     system("pause");
                     break;
-                }
 
-                case 3:{
+                case 3:
                     system("cls");
                     cout<<"--iterative method to find the smallest--"<<endl;
-                    int arr[]={};
-                    int len;
-                    cout<<"Enter number of your array: ";
-                    cin>>len;
-                    cout<<"Enter numbers: ";
+                    cout<<"Your array is [ ";
                     for(int i=0; i<len; i++){
-                        cin>>arr[i];
-                    }
+                        cout<<arr[i]<<" ";
+                        if (i<len-1)
+                            cout<<", ";
+                    } cout<<"]\n";
                     cout<<"The smallest element in your array is "<<small.i_smallest(arr, len)<<endl;
                     system("pause");
                     break;
-                }
-                case 4:{
+
+                case 4:
                     system("cls");
                     cout<<"--Recursive method to find the smallest--"<<endl;
-                    int arr[]={};
-                    int len;
-                    cout<<"Enter number of your array: ";
-                    cin>>len;
-                    cout<<"Enter numbers: ";
+                    cout<<"Your array is [ ";
                     for(int i=0; i<len; i++){
-                        cin>>arr[i];
-                    }
+                        cout<<arr[i]<<" ";
+                        if (i<len-1)
+                            cout<<", ";
+                    } cout<<"]\n";
                     cout<<"The smallest element in your array is "<<small.r_smallest(arr, len)<<endl;
                     system("pause");
                     break;
-                }
-                case 5:{
+
+                case 5:
                     system("cls");
                     cout<<"--Check if Palindrome Iterative Method--"<<endl;
-                    string word;
-                    cout<<"Enter a word: ";
-                    getline(cin>>ws,word);
-                    int len = word.size();
-                    if(palindromechecker.i_palindrome(word))
-                        cout<<"The word "<<word<<" is a palindrome!"<<endl;
+                    cout<<"Your array is [ ";
+                    for(int i=0; i<len; i++){
+                        cout<<arr[i]<<" ";
+                        if (i<len-1)
+                            cout<<", ";
+                    } cout<<"]\n";
+                    if(palindromechecker.i_palindrome(arr, len))
+                        cout<<"The array is a palindrome!"<<endl;
                     else
-                        cout<<"The word "<<word<<" is not a palindrome!"<<endl;
+                        cout<<"The array is not a palindrome!"<<endl;
                     system("pause");
                     break;
-                }
+
                 case 6:{
                     system("cls");
                     cout<<"--Check if Palindrome Recursive Method--"<<endl;
-                    string word;
-                    cout<<"Enter a word: ";
-                    getline(cin>>ws,word);
-                    int right = word.size()-1;
-                    if(palindromechecker.r_palindrome(word, 0, right))
-                        cout<<"The word "<<word<<" is a palindrome!"<<endl;
+                    cout<<"Your array is [ ";
+                    for(int i=0; i<len; i++){
+                        cout<<arr[i]<<" ";
+                        if (i<len-1)
+                            cout<<", ";
+                    } cout<<"]\n";
+                    if(palindromechecker.r_palindrome(arr, 0, len-1))
+                        cout<<"The array is a palindrome!"<<endl;
                     else
-                        cout<<"The word "<<word<<" is not a palindrome!"<<endl;
+                        cout<<"The array is not a palindrome!"<<endl;
                     system("pause");
                     break;
                 }
+
                 case 7:
+                    system("cls");
+                    cout<<"--Enter New Array--"<<endl;
+                    cout<<"Enter size of your array (max 10): ";
+                    cin>>len;
+                    cout<<"Enter elements: ";
+                    for(int i=0; i<len; i++) {
+                        cin>>arr[i];
+                    }
+                    break;
+
+                case 8:
                     exit(0);
+                    break;
+
                 default:
                     cout<<"Invalid Input!"<<endl;
                     system("pause");
